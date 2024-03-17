@@ -8,13 +8,18 @@ app.use(express.static('public'));
 
 // Use Cache-Control: no-store
 
-app.get('/search', (req, res) => {
-    const query = req.query;
+app.get('/search', async (req, res, next) => {
+    let query = req.query;
+    query.path = decodeURIComponent(query.path);
     query.signatures = decodeURIComponent(query.signatures);
     query.signatures = JSON.parse(query.signatures);
-    const results = parse(query);
-    res.set('Cache-Control', 'no-store');
-    res.send('Received');
+    try {
+        const results = parse(query);
+        res.setHeader('Cache-Control', 'no-store');
+        res.send('Received');
+    } catch (err) {
+        next(err);
+    }
 });
 
 app.use((err, req, res, next) => {

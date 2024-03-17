@@ -20,11 +20,11 @@ const fileTypeToSignatures = {
 function changeSigs(preset) {
     let sigs = document.getElementById('sigs');
     if (preset in fileTypeToSignatures) {
-        sigs.value = fileTypeToSignatures[preset].map((type) => convertNonPrintableToHex(type)).join("\n");
+        sigs.value = fileTypeToSignatures[preset].map((type) => encodeHex(type)).join("\n");
     }
 }
 
-function convertNonPrintableToHex(inputString) {
+function encodeHex(inputString) {
     let result = '';
     
     for (let i = 0; i < inputString.length; i++) {
@@ -42,6 +42,26 @@ function convertNonPrintableToHex(inputString) {
     return result;
 }
 
+function decodeHex(inputString) {
+    let words = inputString.split(/\\x[0-9A-Fa-f]{2}/g).filter((word) => word !== '');
+
+    for (const word of words) {
+        let unicodeWord = '';
+        for (let i = 0; i < word.length; ++i) {
+            unicodeWord += word.charCodeAt(i).toString(16).toUpperCase().padStart(2, '0');
+        }
+
+        inputString = inputString.replace(word, unicodeWord);
+        console.log(inputString);
+    }
+
+    let result = inputString.replace(/\\x([0-9A-Fa-f]{2})/g, (_, group) => {
+        return group;
+    });
+
+    return result;
+}
+
 
 // RESULTS
 
@@ -49,10 +69,12 @@ document.getElementById('search-btn').addEventListener("click", async (event) =>
     event.preventDefault();
     hideResults();
 
+    const signatures = document.getElementById('sigs').value.split('\n');
+
     const query = new URLSearchParams({
-        path: document.getElementById('pathInput').value,
+        path: encodeURIComponent(document.getElementById('pathInput').value),
         timeframe: document.querySelector('#timeframes-container input[name="timeframe"]:checked').value,
-        signatures: encodeURIComponent(JSON.stringify(document.getElementById('sigs').value.split('\n')))
+        signatures: encodeURIComponent(JSON.stringify(signatures.map((signature) => decodeHex(signature))))
     }).toString();
 
     await fetch(`/search?${query}`);
