@@ -1,10 +1,18 @@
 * {
     font-family: "Mukta Vaani", sans-serif;
     color: #fff;
+
+    --border-color: rgb(59, 72, 92);
+    --bg-secondary-color: rgb(19, 28, 46);
 }
 
 body {
     background-color: rgb(30, 41, 59);
+    margin: 0;
+}
+
+h1 {
+    margin-top: 0px;
 }
 
 #container {
@@ -12,13 +20,34 @@ body {
     min-height: 200px;
     margin: auto;
     background-color: rgb(41, 53, 72);
-    border: 1px solid rgb(59, 72, 92);
-    border-radius: 4px;
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    /* border-radius: 4px; */
     padding: 20px;
 }
 
+input[type="text"] {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    width: clamp(100px, 300px, 80%);
+    margin-bottom: 1em;
+    background-color: var(--bg-secondary-color);
+    outline: none;
+}
 
+#timeframes-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
+}
 
+#timeframes-container input[type="radio"] {
+    margin-right: .3em;
+}
+
+#timeframes-container *:nth-child(2n) {
+    margin-right: 2em;
+}
 
 
 .mukta-vaani-extralight {
