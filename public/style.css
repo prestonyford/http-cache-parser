@@ -3,11 +3,14 @@
     color: #fff;
 
     --border-color: rgb(59, 72, 92);
+    --bg-primary-color: rgb(30, 41, 59);
     --bg-secondary-color: rgb(19, 28, 46);
+    --button-hover-color: rgb(25, 35, 56);
+    --button-active-color: lightblue;
 }
 
 body {
-    background-color: rgb(30, 41, 59);
+    background-color: var(--bg-primary-color);
     margin: 0;
 }
 
@@ -19,9 +22,20 @@ h2 {
     margin-bottom: .2em;
 }
 
+hr {
+    width: calc(100% + 40px);
+    position: relative;
+    transform: translateX(-20px);
+    height: 1px;
+    border-width: 0;
+    background-color: var(--border-color);
+    margin: 1em 0;
+}
+
 #container {
     max-width: 960px;
-    min-height: 200px;
+    min-height: calc(100vh - 40px);
+    height: calc(100% + 400px);
     margin: auto;
     background-color: rgb(41, 53, 72);
     border-left: 1px solid var(--border-color);
@@ -31,6 +45,7 @@ h2 {
 }
 
 input[type="text"], select, textarea {
+    box-sizing: border-box;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     width: clamp(100px, 300px, 80%);
@@ -38,6 +53,21 @@ input[type="text"], select, textarea {
     margin-bottom: 1em;
     background-color: var(--bg-secondary-color);
     outline: none;
+}
+
+button {
+    padding: .2em .6em;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-secondary-color);
+}
+
+button:hover {
+    background-color: var(--button-hover-color);
+}
+
+button:active { 
+    border-color: var(--button-active-color);
 }
 
 #timeframes-container {
@@ -58,7 +88,6 @@ input[type="text"], select, textarea {
 label[for="preset"] {
     margin-left: 5px;
 }
-
 
 
 .mukta-vaani-extralight {
