@@ -96,6 +96,31 @@ label[for="preset"] {
     margin-left: 5px;
 }
 
+/* RESULTS CONTAINER */
+#loading-text {
+    display: none;
+}
+
+#results-container {
+    display: none;
+    /* display: grid; */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1em;
+    grid-template-rows: auto;
+}
+
+.item-preview {
+    min-width: 180px;
+    height: 200px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 
 .mukta-vaani-extralight {
     font-family: "Mukta Vaani", sans-serif;

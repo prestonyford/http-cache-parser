@@ -41,3 +41,41 @@ function convertNonPrintableToHex(inputString) {
     
     return result;
 }
+
+
+// RESULTS
+
+document.getElementById('search-btn').addEventListener("click", async (event) => {
+    event.preventDefault();
+    hideResults();
+
+    const query = new URLSearchParams({
+        path: document.getElementById('pathInput').value,
+        timeframe: document.querySelector('#timeframes-container input[name="timeframe"]:checked').value,
+        signatures: encodeURIComponent(JSON.stringify(document.getElementById('sigs').value.split('\n')))
+    }).toString();
+
+    await fetch(`/search?${query}`);
+});
+
+function hideResults() {
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.style.display = 'none';
+
+    let percent = 0;
+    const loadingText = document.getElementById('loading-text');
+    loadingText.style.display = 'flow';
+    const loadingPercent = document.getElementById('loading-percent');
+
+    let interval = setInterval(async () => {
+        if (percent >= 100) {
+            await new Promise(r => setTimeout(r, 600));
+            loadingText.style.display = 'none';
+            resultsContainer.style.display = 'grid';
+            clearInterval(interval);
+            return;
+        }
+        percent += 1;
+        loadingPercent.innerText = percent;
+    }, 4);
+}

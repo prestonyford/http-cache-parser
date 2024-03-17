@@ -10,19 +10,19 @@
 </head>
 <body>
     <div id="container">
-        <h1>HTTP Cache Parser</h1>
+        <h1>HTTP Cache File Signature Parser</h1>
         <h2>Configure</h2>
         <form action="/submit" >
             <label for="directoryPath">Enter directory path:</label><br>
-            <input class="mb" type="text" name="directoryPath" placeholder="e.g. %LocalAppData%\Mozilla\Firefox\Profiles\toy7mtpb.default-release\cache2" required><br>
+            <input class="mb" id="pathInput" type="text" name="directoryPath" placeholder="e.g. %LocalAppData%\Mozilla\Firefox\Profiles\toy7mtpb.default-release\cache2" required><br>
 
             <label for="">Timeframe:</label><br>
             <div class="mb" id="timeframes-container">
-                <input type="radio" id="timeframe-1hr" name="timeframe" value="timeframe-1hr" checked>
+                <input type="radio" id="timeframe-1hr" name="timeframe" value="1hr" checked>
                 <label for="timeframe-1hr">Last 1hr</label>
-                <input type="radio" id="timeframe-3hr" name="timeframe" value="timeframe-3hr">
+                <input type="radio" id="timeframe-3hr" name="timeframe" value="3hr">
                 <label for="timeframe-3hr">Last 3hrs</label>
-                <input type="radio" id="timeframe-today" name="timeframe" value="timeframe-today">
+                <input type="radio" id="timeframe-today" name="timeframe" value="today">
                 <label for="timeframe-today">Today</label>
             </div>
 
@@ -38,12 +38,55 @@
             <textarea id="sigs" type="text" rows="4" required></textarea><br>
             <small class="mb">Delimited by newline</small><br>
             
-            <button type="submit">Search</button>
+            <button id="search-btn" type="submit">Search</button>
         </form>
 
         <hr></hr>
 
         <h2>Results</h2>
+        <i id="loading-text">Loading... <span id="loading-percent">0</span>%</i>
+        <div id="results-container">
+            <div class="item">
+                <div class="item-preview">
+                    <img src="C:\Users\prest\OneDrive\Documents\LL\items.png" alt="no preview">
+                </div>
+                <div class="item-description">
+                    2.45MB - 2021-09-01 12:00:00 path
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-preview">
+                    <img src="https://via.placeholder.com/150" alt="no preview">
+                </div>
+                <div class="item-description">
+                    2.45MB - 2021-09-01 12:00:00 path
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-preview">
+                    <img src="https://via.placeholder.com/150" alt="no preview">
+                </div>
+                <div class="item-description">
+                    2.45MB - 2021-09-01 12:00:00 path
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-preview">
+                    <img src="https://via.placeholder.com/150" alt="no preview">
+                </div>
+                <div class="item-description">
+                    2.45MB - 2021-09-01 12:00:00 path
+                </div>
+            </div>
+            <div class="item">
+                <div class="item-preview">
+                    <img src="https://via.placeholder.com/150" alt="no preview">
+                </div>
+                <div class="item-description">
+                    2.45MB - 2021-09-01 12:00:00 path
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
