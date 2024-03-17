@@ -1,0 +1,65 @@
+* {
+    font-family: "Mukta Vaani", sans-serif;
+    color: #fff;
+}
+
+body {
+    background-color: rgb(30, 41, 59);
+}
+
+#container {
+    max-width: 960px;
+    min-height: 200px;
+    margin: auto;
+    background-color: rgb(41, 53, 72);
+    border: 1px solid rgb(59, 72, 92);
+    border-radius: 4px;
+    padding: 20px;
+}
+
+
+
+
+
+.mukta-vaani-extralight {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+  
+.mukta-vaani-light {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+  
+.mukta-vaani-regular {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+  
+.mukta-vaani-medium {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+  
+.mukta-vaani-semibold {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+  
+.mukta-vaani-bold {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+  
+.mukta-vaani-extrabold {
+    font-family: "Mukta Vaani", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+  
