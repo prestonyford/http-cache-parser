@@ -11,22 +11,32 @@
     <div id="container">
         <div id="">
             <h1>HTTP Cache Parser</h1>
+            <h2>Configure</h2>
             <form action="/submit" >
                 <label for="directoryPath">Enter directory path:</label><br>
-                <input type="text" name="directoryPath" placeholder="" required><br>
+                <input type="text" name="directoryPath" placeholder="e.g. %LocalAppData%\Mozilla\Firefox\Profiles\toy7mtpb.default-release\cache2" required><br>
 
                 <label for="">Timeframe:</label><br>
                 <div id="timeframes-container">
-                    <input type="radio" id="timeframe-1hr" name="timeframe" value="timeframe-1hr">
+                    <input type="radio" id="timeframe-1hr" name="timeframe" value="timeframe-1hr" checked>
                     <label for="timeframe-1hr">Last 1hr</label>
                     <input type="radio" id="timeframe-3hr" name="timeframe" value="timeframe-3hr">
                     <label for="timeframe-3hr">Last 3hrs</label>
                     <input type="radio" id="timeframe-today" name="timeframe" value="timeframe-today">
                     <label for="timeframe-today">Today</label>
                 </div>
-                
 
                 <label>File signatures <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_file_signatures">(ISO 8859-1)</a>:</label><br>
+                <label for="preset">Preset: </label>
+                <select name="preset" id="preset">
+                    <option value="none" selected>None</option>
+                    <option value="png">PNG Images</option>
+                    <option value="jpg">JPG Images</option>
+                    <option value="mp3">MP3 Audio</option>
+                    <option value="ogg">OGG Audio</option>
+                </select><br>
+                <textarea id="sigs" type="text" rows="4" required><br>
+                
             </form>
         </div>
     </div>

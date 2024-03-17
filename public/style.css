@@ -15,6 +15,10 @@ h1 {
     margin-top: 0px;
 }
 
+h2 {
+    margin-bottom: .2em;
+}
+
 #container {
     max-width: 960px;
     min-height: 200px;
@@ -26,10 +30,11 @@ h1 {
     padding: 20px;
 }
 
-input[type="text"] {
+input[type="text"], select, textarea {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     width: clamp(100px, 300px, 80%);
+    max-width: 100%;
     margin-bottom: 1em;
     background-color: var(--bg-secondary-color);
     outline: none;
@@ -48,6 +53,12 @@ input[type="text"] {
 #timeframes-container *:nth-child(2n) {
     margin-right: 2em;
 }
+
+
+label[for="preset"] {
+    margin-left: 5px;
+}
+
 
 
 .mukta-vaani-extralight {
