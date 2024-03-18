@@ -14,6 +14,7 @@ const fileTypeToSignatures = {
     "exe": ["MZ"],
     "mp3": ["ID3", "\xFF\xFB", "\xFF\xF3"],
     "ogg": ["OggS"],
+    "webp": ["WEBP"]
 };
 
 function changeSigs(preset) {
