@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const hex = require('string-hex');
 
 function parse(query) {
     console.log(query);
@@ -51,17 +50,9 @@ function parseFileSig(filePath, signatures) {
 function parseFileBody(hexString, signature) {
     const body = signature + hexString.split(signature)[1];
     const buffer = Buffer.from(body, 'hex');
-    console.log(buffer);
+    // console.log(buffer);
     // fs.writeFileSync("test.png", buffer);
     return buffer;
 }
 
 module.exports = parse;
-
-// const filepath = "C:\\Users\\prest\\AppData\\Local\\Temp\\Roblox\\http\\4fe333ca69da81e72ed47f18333d8300";
-
-// (async () => {
-//     if (await parseFileSig(filepath, ["89504E470D0A1A0A".toLowerCase()])) {
-//         console.log('Found file');
-//     }
-// })()

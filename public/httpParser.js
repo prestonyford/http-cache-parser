@@ -1,4 +1,3 @@
-
 // File signatures
 document.getElementById('preset').addEventListener("input", (event) => {
     let preset = event.target.value;
@@ -105,14 +104,13 @@ function createResult(file) {
     const itemPreview = document.createElement('div');
     itemPreview.classList.add('item-preview');
     const img = document.createElement('img');
-    // console.log(file.buffer);
     const binaryString = window.atob(file.buffer);
     const buffer = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         buffer[i] = binaryString.charCodeAt(i);
     }
     const arrayBuffer = buffer.buffer;
-    const blob = new Blob([arrayBuffer], { type: 'image/png' });
+    const blob = new Blob([arrayBuffer]); // , { type: 'image/png' }
     img.src = URL.createObjectURL(blob);
     img.alt = "no preview available";
     itemPreview.appendChild(img);
