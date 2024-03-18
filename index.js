@@ -16,7 +16,9 @@ app.get('/search', async (req, res, next) => {
     try {
         const results = parse(query);
         res.setHeader('Cache-Control', 'no-store');
-        res.send('Received');
+        // res.setHeader('Content-length', results.size);
+        res.status(200);
+        res.send(results);
     } catch (err) {
         next(err);
     }

@@ -102,8 +102,7 @@ label[for="preset"] {
 }
 
 #results-container {
-    display: none;
-    /* display: grid; */
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1em;
     grid-template-rows: auto;
@@ -120,6 +119,10 @@ label[for="preset"] {
     align-items: center;
 }
 
+.item-preview img {
+    max-width: 100%;
+    max-height: 100%;
+}
 
 
 .mukta-vaani-extralight {

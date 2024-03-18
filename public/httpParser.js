@@ -77,27 +77,52 @@ document.getElementById('search-btn').addEventListener("click", async (event) =>
         signatures: encodeURIComponent(JSON.stringify(signatures.map((signature) => decodeHex(signature))))
     }).toString();
 
-    await fetch(`/search?${query}`);
+    const response = await fetch(`/search?${query}`);
+    const files = await response.json();
+    showResults(files);
 });
 
 function hideResults() {
-    const resultsContainer = document.getElementById('results-container');
-    resultsContainer.style.display = 'none';
-
-    let percent = 0;
+    document.getElementById('results-container').innerHTML = '';
     const loadingText = document.getElementById('loading-text');
     loadingText.style.display = 'flow';
-    const loadingPercent = document.getElementById('loading-percent');
+}
 
-    let interval = setInterval(async () => {
-        if (percent >= 100) {
-            await new Promise(r => setTimeout(r, 600));
-            loadingText.style.display = 'none';
-            resultsContainer.style.display = 'grid';
-            clearInterval(interval);
-            return;
-        }
-        percent += 1;
-        loadingPercent.innerText = percent;
-    }, 4);
+function showResults(files) {
+    const loadingText = document.getElementById('loading-text');
+    loadingText.style.display = 'none';
+
+    const resultsContainer = document.getElementById('results-container');
+    for (const file of files) {
+        resultsContainer.appendChild(createResult(file));
+    }
+}
+
+function createResult(file) {
+    const item = document.createElement('div');
+    item.classList.add('item');
+
+    const itemPreview = document.createElement('div');
+    itemPreview.classList.add('item-preview');
+    const img = document.createElement('img');
+    // console.log(file.buffer);
+    const binaryString = window.atob(file.buffer);
+    const buffer = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        buffer[i] = binaryString.charCodeAt(i);
+    }
+    const arrayBuffer = buffer.buffer;
+    const blob = new Blob([arrayBuffer], { type: 'image/png' });
+    img.src = URL.createObjectURL(blob);
+    img.alt = "no preview available";
+    itemPreview.appendChild(img);
+
+    const itemDescription = document.createElement('div');
+    itemDescription.classList.add('item-description');
+    itemDescription.textContent = `${file.name} - ${file.date} - ${file.size} bytes`;
+
+    item.appendChild(itemPreview);
+    item.appendChild(itemDescription);
+
+    return item;
 }
