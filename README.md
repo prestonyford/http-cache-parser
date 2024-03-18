@@ -1,5 +1,8 @@
 Inspect the HTTP cache of browsers or online game clients and preview image or audio assets of different formats.
 
+## Preview
+![preview](screenshot1.png)
+
 ## Installation
 - Install node.js
 - Open a shell/command line interface and navigate to the directory of index.js
