@@ -1,4 +1,4 @@
-Inspect the HTTP cache of browsers or online game clients and preview image or audio assets of different formats.
+Inspect the HTTP cache of browsers or online game clients and preview image or audio assets of different formats using their [file signatures](https://en.wikipedia.org/wiki/List_of_file_signatures).
 
 ## Preview
 ![preview](screenshot1.png)
