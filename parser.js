@@ -62,7 +62,7 @@ function parseFileSig(filePath, signatures) {
         const match = regex.exec(hexString);
         if (match) {
             console.log(match.index);
-            return parseFileBody(match, signature);
+            return parseFileBody(match, signature, match[1].length);
         }
     }
     return null;
@@ -71,11 +71,11 @@ function parseFileSig(filePath, signatures) {
 function sigToRegex(signature) {
     // Signatures are either at the very beginning of the file or after a CRLF following the header
     // Signatures are NOT GUARANTEED to be at the beginning of the file
-    return new RegExp(`(^|\r\n)${signature}`, 'g');
+    return new RegExp(`(^|0d0a)${signature}`, 'g');
 }
 
-function parseFileBody(match, signature) {
-    const body = signature + match.input.substring(match.index + signature.length);
+function parseFileBody(match, signature, offset) {
+    const body = signature + match.input.substring(match.index + signature.length + offset);
     const buffer = Buffer.from(body, 'hex');
     // console.log(buffer);
     // fs.writeFileSync("test.png", buffer);
