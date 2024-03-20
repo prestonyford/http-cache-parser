@@ -9,6 +9,7 @@ const category = Object.fromEntries(
         "FF D8 FF E8" : ["image", "jpeg"],
         "FF D8 FF EE" : ["image", "jpeg"],
         "FF D8 FF E0" : ["image", "jpeg"],
+        "52 49 46 46 ?? ?? ?? ?? 57 45 42 50" : ["image", "webp"],
         "49 44 33" : ["audio", "mp3"],
         "FF FB" : ["audio", "mp3"],
         "FF F3" : ["audio", "mp3"],
@@ -62,7 +63,7 @@ function parseFileSig(filePath, signatures) {
         const match = regex.exec(hexString);
         if (match) {
             console.log(match.index);
-            return parseFileBody(match, signature, match[1].length);
+            return parseFileBody(match);
         }
     }
     return null;
@@ -71,11 +72,13 @@ function parseFileSig(filePath, signatures) {
 function sigToRegex(signature) {
     // Signatures are either at the very beginning of the file or after a CRLF following the header
     // Signatures are NOT GUARANTEED to be at the beginning of the file
-    return new RegExp(`(^|0d0a)${signature}`, 'g');
+    return new RegExp(`(^|0d0a)${signature.replace(/\?/g, '.')}`, 'g');
 }
 
-function parseFileBody(match, signature, offset) {
-    const body = signature + match.input.substring(match.index + signature.length + offset);
+function parseFileBody(match) {
+    const offset = match[1].length;
+    const body = match.input.substring(match.index + offset);
+    console.log(body);
     const buffer = Buffer.from(body, 'hex');
     // console.log(buffer);
     // fs.writeFileSync("test.png", buffer);
