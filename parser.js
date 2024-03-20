@@ -58,7 +58,7 @@ function parseFileSig(filePath, signatures) {
     const hexString = data.toString('hex');
 
     for (const signature of signatures) {
-        const regex = new RegExp(signature, 'g');
+        const regex = sigToRegex(signature);
         const match = regex.exec(hexString);
         if (match) {
             console.log(match.index);
@@ -66,6 +66,11 @@ function parseFileSig(filePath, signatures) {
         }
     }
     return null;
+}
+
+function sigToRegex(signature) {
+    // Signatures are either at the very beginning of the file or after a CRLF following the header
+    return new RegExp(`(^|\r\n)${signature}`, 'g');
 }
 
 function parseFileBody(match, signature) {
