@@ -38,12 +38,18 @@ document.getElementById('search-btn').addEventListener("click", async (event) =>
         signatures: encodeURIComponent(JSON.stringify(signatures))
     }).toString();
 
-    const response = await fetch(`/search?${query}`);
-    if (!response.ok) {
-        document.getElementById('loading-text').textContent = await response.text();
+    try {
+        const response = await fetch(`/search?${query}`);
+        if (!response.ok) {
+            document.getElementById('loading-text').textContent = await response.text();
+        }
+        const files = await response.json();
+        showResults(files);
+    } catch (err) {
+        console.error(err);
+        document.getElementById('loading-text').textContent = err.message + " (Is the server running?)";
+    
     }
-    const files = await response.json();
-    showResults(files);
 });
 
 function hideResults() {

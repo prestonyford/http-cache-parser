@@ -70,6 +70,7 @@ function parseFileSig(filePath, signatures) {
 
 function sigToRegex(signature) {
     // Signatures are either at the very beginning of the file or after a CRLF following the header
+    // Signatures are NOT GUARANTEED to be at the beginning of the file
     return new RegExp(`(^|\r\n)${signature}`, 'g');
 }
 
