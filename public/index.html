@@ -12,7 +12,7 @@
     <div id="container">
         <h1>HTTP Cache File Signature Search</h1>
         <h2>Configure</h2>
-        <form action="/submit" >
+        <form>
             <label for="directoryPath">Enter directory path:</label><br>
             <input class="mb" id="pathInput" type="text" name="directoryPath" placeholder="e.g. %LocalAppData%\Mozilla\Firefox\Profiles\toy7mtpb.default-release\cache2\entries" required><br>
 
@@ -26,7 +26,7 @@
                 <label for="timeframe-today">Today</label>
             </div>
 
-            <label>File signatures <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_file_signatures">(ISO 8859-1)</a>:</label><br>
+            <label>File signatures <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_file_signatures">(Hex)</a>:</label><br>
             <label for="preset">Preset: </label>
             <select class="mb" name="preset" id="preset">
                 <option value="none" selected>None</option>
@@ -34,7 +34,7 @@
                 <option value="jpg">JPG Images</option>
                 <option value="mp3">MP3 Audio</option>
                 <option value="ogg">OGG Audio</option>
-                <option value="webp">WebP image (preview unavailable)</option>
+                <option value="webp">WebP image (beta)</option>
             </select><br>
             <textarea id="sigs" type="text" rows="4" required></textarea><br>
             <small class="mb">Delimited by newline</small><br>

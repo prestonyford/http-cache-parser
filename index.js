@@ -1,5 +1,5 @@
 const express = require('express');
-const parse = require('./parser.js');
+const { parse, category } = require('./parser.js');
 const app = express();
 
 const PORT = 4000;
@@ -16,6 +16,7 @@ app.get('/search', async (req, res, next) => {
     try {
         const results = parse(query);
         res.setHeader('Cache-Control', 'no-store');
+        // res.setHeader('Content-Type', `${category[query.signatures[0]][0]}/${category[query.signatures[0]][1]}`);
         // res.setHeader('Content-length', results.size);
         res.status(200);
         res.send(results);
