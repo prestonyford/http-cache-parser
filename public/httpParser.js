@@ -8,7 +8,7 @@ document.getElementById('preset').addEventListener("input", (event) => {
 const fileTypeToSignatures = {
     "pdf": ["%PDF-"],
     "png": ["89 50 4E 47 0D 0A 1A 0A"],
-    "jpg": ["FF D8 FF E0", "FF D8 FF EE", "FF D8 FF DB", "FF D8 FF E0 00 10 4A 46 49 46 00 01", "FF D8 FF E8"], // missing FF D8 FF E1 ?? ?? 45 78 69 66 00 00
+    "jpg": ["FF D8 FF E0", "FF D8 FF EE", "FF D8 FF DB", "FF D8 FF E0 00 10 4A 46 49 46 00 01", "FF D8 FF E1 ?? ?? 45 78 69 66 00 00", "FF D8 FF E8", "FF 4F FF 51", "00 00 00 0C 4A 58 4C 20 0D 0A 87 0A", "FF 0A"], // missing FF D8 FF E1 ?? ?? 45 78 69 66 00 00
     // "gif": ["GIF87a", "GIF89a"],
     "webp": ["52 49 46 46 ?? ?? ?? ?? 57 45 42 50"],
     "zip": ["50 4B 03 04", "50 4B 05 06", "50 4B 07 08"],

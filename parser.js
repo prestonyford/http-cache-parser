@@ -8,7 +8,10 @@ const category = Object.fromEntries(
         "FF D8 FF E0 00 10 4A 46 49 46 00 01" : ["image", "jpeg"],
         "FF D8 FF E8" : ["image", "jpeg"],
         "FF D8 FF EE" : ["image", "jpeg"],
+        "FF D8 FF E1 ?? ?? 45 78 69 66 00 00" : ["image", "jpeg"],
         "FF D8 FF E0" : ["image", "jpeg"],
+        "00 00 00 0C 6A 50 20 20 0D 0A 87 0A" : ["image", "jpeg"],
+        "FF 4F FF 51" : ["image", "jpeg"],
         "52 49 46 46 ?? ?? ?? ?? 57 45 42 50" : ["image", "webp"],
         "49 44 33" : ["audio", "mp3"],
         "FF FB" : ["audio", "mp3"],
@@ -62,7 +65,6 @@ function parseFileSig(filePath, signatures) {
         const regex = sigToRegex(signature);
         const match = regex.exec(hexString);
         if (match) {
-            console.log(match.index);
             return parseFileBody(match);
         }
     }
@@ -78,10 +80,7 @@ function sigToRegex(signature) {
 function parseFileBody(match) {
     const offset = match[1].length;
     const body = match.input.substring(match.index + offset);
-    console.log(body);
     const buffer = Buffer.from(body, 'hex');
-    // console.log(buffer);
-    // fs.writeFileSync("test.png", buffer);
     return buffer;
 }
 
