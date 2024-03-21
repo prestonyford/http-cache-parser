@@ -23,6 +23,10 @@ const category = Object.fromEntries(
 function parse(query) {
     console.log(query);
 
+    if (query.signatures.length === 0 || query.signatures[0] === "") {
+        throw new Error("No signatures provided");
+    }
+
     // Signatures all lowercase and no spaces
     return searchDirectory(query.path, query.signatures.map((sig) => sig.toLowerCase().replace(/\s/g, '')));
 }
@@ -46,7 +50,7 @@ function searchDirectory(directory, signatures) {
             results.push({
                 name: file,
                 type: category[signatures[0]] ? category[signatures[0]][0] : "image/png",
-                date: stats.mtime.toString(),
+                date: stats.mtime.toLocaleString(),
                 size: stats.size,
                 buffer: buffer.toString('base64')
             });

@@ -27,6 +27,8 @@ function changeSigs(preset) {
 
 // RESULTS
 
+let results = [];
+
 document.getElementById('search-btn').addEventListener("click", async (event) => {
     event.preventDefault();
     hideResults();
@@ -43,14 +45,22 @@ document.getElementById('search-btn').addEventListener("click", async (event) =>
         const response = await fetch(`/search?${query}`);
         if (!response.ok) {
             document.getElementById('loading-text').textContent = await response.text();
+            return;
         }
-        const files = await response.json();
-        showResults(files);
+        results = await response.json();
+        showResults();
     } catch (err) {
         console.error(err);
         document.getElementById('loading-text').textContent = err.message + " (Is the server running?)";
     
     }
+});
+
+document.getElementById('sortby').addEventListener("change", (event) => {
+    if (results.length === 0) return;
+    sortResults();
+    hideResults();
+    showResults();
 });
 
 function hideResults() {
@@ -60,14 +70,33 @@ function hideResults() {
     loadingText.textContent = 'Loading...';
 }
 
-function showResults(files) {
+function showResults() {
     const loadingText = document.getElementById('loading-text');
-    loadingText.style.display = 'none';
+    if (results.length === 0) {
+        loadingText.textContent = 'No results found';
+        return;
+    }
 
+    loadingText.style.display = 'none';
     const resultsContainer = document.getElementById('results-container');
-    for (const file of files) {
+
+    sortResults();
+    for (const file of results) {
         resultsContainer.appendChild(createResult(file));
     }
+}
+
+function sortResults() {
+    const sortby = document.getElementById('sortby').value;
+    results.sort((a, b) => {
+        if (sortby === 'name') {
+            return a.name.localeCompare(b.name);
+        } else if (sortby === 'date') {
+            return new Date(a.date) - new Date(b.date);
+        } else if (sortby === 'size') {
+            return a.size - b.size;
+        }
+    });
 }
 
 function createResult(file) {
@@ -82,7 +111,7 @@ function createResult(file) {
 
     const itemDescription = document.createElement('div');
     itemDescription.classList.add('item-description');
-    itemDescription.textContent = `${file.name} - ${file.date} - ${file.size} bytes`;
+    itemDescription.textContent = `${file.name} - ${file.date} - ${(file.size / 1048576).toFixed(2)} MB`;
 
     item.appendChild(itemPreview);
     item.appendChild(itemDescription);
