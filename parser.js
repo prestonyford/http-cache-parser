@@ -26,19 +26,23 @@ function parse(query) {
     if (query.signatures.length === 0 || query.signatures[0] === "") {
         throw new Error("No signatures provided");
     }
+    if (!query.timeframe.match(/^\d{1,2}:\d{1,2}$/)) {
+        throw new Error("Invalid timeframe format");
+    }
+
+    const timeframe = new Date();
+    timeframe.setHours(timeframe.getHours() - parseInt(query.timeframe.split(':')[0]));
+    timeframe.setMinutes(timeframe.getMinutes() - parseInt(query.timeframe.split(':')[1]));
 
     // Signatures all lowercase and no spaces
-    return searchDirectory(query.path, query.signatures.map((sig) => sig.toLowerCase().replace(/\s/g, '')));
+    return searchDirectory(query.path, timeframe, query.signatures.map((sig) => sig.toLowerCase().replace(/\s/g, '')));
 }
 
-function searchDirectory(directory, signatures) {
-    let oneHourAgo = new Date();
-    oneHourAgo.setHours(oneHourAgo.getHours() - 5);
-
+function searchDirectory(directory, timeframe, signatures) {
     let files = fs.readdirSync(directory);
     files = files.filter((file) => {
         const stats = fs.statSync(path.join(directory, file));
-        return stats.mtime > oneHourAgo;
+        return stats.mtime > timeframe;
     });
 
     let results = []

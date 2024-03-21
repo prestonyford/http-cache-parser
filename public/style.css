@@ -50,7 +50,6 @@ hr {
     background-color: rgb(41, 53, 72);
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
-    /* border-radius: 4px; */
 }
 
 input:not([type="radio"]), select, textarea {
@@ -78,6 +77,14 @@ button:active {
     border-color: var(--button-active-color);
 }
 
+label.durationInput {
+    margin-right: .5em !important;
+}
+
+input.durationInput {
+    width: 4em !important;
+}
+
 #timeframes-container {
     display: flex;
     flex-wrap: wrap;
@@ -97,10 +104,6 @@ label[for="preset"] {
 }
 
 /* RESULTS CONTAINER */
-#loading-text {
-    
-}
-
 #results-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, .5fr));
@@ -127,6 +130,8 @@ label[for="preset"] {
 .item-description {
     word-wrap: anywhere;
 }
+
+
 
 
 .mukta-vaani-extralight {

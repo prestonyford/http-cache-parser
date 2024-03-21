@@ -18,12 +18,15 @@
 
             <label for="">Timeframe:</label><br>
             <div class="mb" id="timeframes-container">
-                <input type="radio" id="timeframe-1hr" name="timeframe" value="1hr" checked>
+                <input type="radio" id="timeframe-1hr" name="timeframe" value="1:00" checked>
                 <label for="timeframe-1hr">Last 1hr</label>
-                <input type="radio" id="timeframe-3hr" name="timeframe" value="3hr">
+                <input type="radio" id="timeframe-3hr" name="timeframe" value="3:00">
                 <label for="timeframe-3hr">Last 3hrs</label>
-                <input type="radio" id="timeframe-today" name="timeframe" value="today">
+                <input type="radio" id="timeframe-today" name="timeframe" value="24:00">
                 <label for="timeframe-today">Today</label>
+                <input type="radio" id="timeframe-custom-radio" name="timeframe" value="custom">
+                <label for="timeframe-custom-radio" class="durationInput">Custom:</label>
+                <input id="timeframe-custom" class="durationInput" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM"></input>
             </div>
 
             <label for="limit">Limit results (0 for no limit):</label><br>
@@ -40,7 +43,7 @@
                 <option value="ogg">OGG Audio</option>
             </select><br>
             <textarea id="sigs" type="text" rows="4" required></textarea><br>
-            <small class="mb">Delimited by newline</small><br>
+            <small class="mb">Delimited by newline. Use ?? to indicate unknown bytes.</small><br>
             
             <button id="search-btn" type="submit">Search</button>
         </form>

@@ -11,8 +11,8 @@ app.use(express.static('public'));
 app.get('/search', async (req, res, next) => {
     let query = req.query;
     query.path = decodeURIComponent(query.path);
-    query.signatures = decodeURIComponent(query.signatures);
-    query.signatures = JSON.parse(query.signatures);
+    query.signatures = JSON.parse(decodeURIComponent(query.signatures));
+    query.timeframe = decodeURIComponent(query.timeframe);
     try {
         const results = parse(query);
         res.setHeader('Cache-Control', 'no-store');

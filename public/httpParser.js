@@ -34,10 +34,14 @@ document.getElementById('search-btn').addEventListener("click", async (event) =>
     hideResults();
 
     const signatures = document.getElementById('sigs').value.split('\n');
+    let timeframe = document.querySelector('#timeframes-container input[name="timeframe"]:checked').value;
+    if (timeframe === "custom") {
+        timeframe = document.getElementById('timeframe-custom').value;
+    }
 
     const query = new URLSearchParams({
         path: encodeURIComponent(document.getElementById('pathInput').value),
-        timeframe: document.querySelector('#timeframes-container input[name="timeframe"]:checked').value,
+        timeframe: encodeURIComponent(timeframe),
         signatures: encodeURIComponent(JSON.stringify(signatures))
     }).toString();
 
