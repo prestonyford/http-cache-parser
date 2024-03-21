@@ -26,21 +26,18 @@
                 <label for="timeframe-today">Today</label>
                 <input type="radio" id="timeframe-custom-radio" name="timeframe" value="custom">
                 <label for="timeframe-custom-radio" class="durationInput">Custom:</label>
-                <input id="timeframe-custom" class="durationInput" pattern="[0-9]{2}:[0-9]{2}" placeholder="HH:MM"></input>
+                <input id="timeframe-custom" class="durationInput" pattern="^\d{1,2}:\d{1,2}$" placeholder="hh:mm"></input>
             </div>
-
-            <label for="limit">Limit results (0 for no limit):</label><br>
-            <input class="mb" id="limitInput" type="number" name="limit" placeholder="0" required><br>
 
             <label><a target="_blank" href="https://en.wikipedia.org/wiki/List_of_file_signatures">File signatures</a> (Hex):</label><br>
             <label for="preset">Preset: </label>
             <select class="mb" name="preset" id="preset">
                 <option value="none" selected>None</option>
-                <option value="png">PNG Images</option>
-                <option value="jpg">JPG Images</option>
-                <option value="webp">WebP image</option>
-                <option value="mp3">MP3 Audio</option>
-                <option value="ogg">OGG Audio</option>
+                <option value="png">PNG images</option>
+                <option value="jpg">JPG images</option>
+                <option value="webp">WebP images</option>
+                <option value="mp3">MP3 audio</option>
+                <option value="ogg">OGG audio</option>
             </select><br>
             <textarea id="sigs" type="text" rows="4" required></textarea><br>
             <small class="mb">Delimited by newline. Use ?? to indicate unknown bytes.</small><br>
@@ -63,5 +60,9 @@
         </div>
         <i id="loading-text"></i>
     </div>
+
+    <footer>
+        <a href="https://github.com/prestonyford/http-cache-parser">GitHub</a>
+    </footer>
 </body>
 </html>

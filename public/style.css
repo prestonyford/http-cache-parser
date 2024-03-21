@@ -85,6 +85,11 @@ input.durationInput {
     width: 4em !important;
 }
 
+.durationInput:invalid {
+    background-color: #73353f;
+    border-color: red;
+}
+
 #timeframes-container {
     display: flex;
     flex-wrap: wrap;
@@ -131,7 +136,14 @@ label[for="preset"] {
     word-wrap: anywhere;
 }
 
-
+footer {
+    position: fixed;
+    background-color: var(--bg-primary-color);
+    right: 0;
+    bottom: 0;
+    padding: 4px 10px;
+    border-top-left-radius: 4px;
+}
 
 
 .mukta-vaani-extralight {
