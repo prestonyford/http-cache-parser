@@ -132,7 +132,7 @@ function createResult(file) {
 }
 
 function createPreview(file) {
-    switch (file.type) {
+    switch (file.type.split('/')[0]) {
         case "image":
             return _createImagePreview(file);
         case "audio":

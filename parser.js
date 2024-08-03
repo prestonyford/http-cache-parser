@@ -60,12 +60,15 @@ function searchDirectory(directory, timeframe, signatures) {
     let results = []
     
     for (const file of files) {
-        const buffer = parseFileSig(path.join(directory, file), signatures);
-        if (buffer != null) {
+        let [buffer, sig] = parseFileSig(path.join(directory, file), signatures);
+        if (sig !== null) {
+            sig = sig.toLowerCase().replace(/\s/g, '');
+        }
+        if (buffer !== null) {
             const stats = fs.statSync(path.join(directory, file));
             results.push({
                 name: file,
-                type: category[signatures[0]] ? category[signatures[0]][0] : "image/png",
+                type: category[sig] ? `${category[sig][0]}/${category[sig][1]}` : "image/png",
                 date: stats.mtime.toLocaleString(),
                 size: stats.size,
                 buffer: buffer.toString('base64')
@@ -85,10 +88,10 @@ function parseFileSig(filePath, signatures) {
         const regex = sigToRegex(signature);
         const match = regex.exec(hexString);
         if (match) {
-            return parseFileBody(match);
+            return [parseFileBody(match), signature];
         }
     }
-    return null;
+    return [null, null];
 }
 
 function sigToRegex(signature) {
