@@ -1,28 +1,40 @@
 const fs = require('fs');
 const path = require('path');
 
-const category = Object.fromEntries(
-    Object.entries({
-        "89 50 4E 47 0D 0A 1A 0A" : ["image", "png"],
-        "FF D8 FF DB" : ["image", "jpeg"],
-        "FF D8 FF E0 00 10 4A 46 49 46 00 01" : ["image", "jpeg"],
-        "FF D8 FF E8" : ["image", "jpeg"],
-        "FF D8 FF EE" : ["image", "jpeg"],
-        "FF D8 FF E1 ?? ?? 45 78 69 66 00 00" : ["image", "jpeg"],
-        "FF D8 FF E0" : ["image", "jpeg"],
-        "00 00 00 0C 6A 50 20 20 0D 0A 87 0A" : ["image", "jpeg"],
-        "FF 4F FF 51" : ["image", "jpeg"],
-        "52 49 46 46 ?? ?? ?? ?? 57 45 42 50" : ["image", "webp"],
-        "49 44 33" : ["audio", "mp3"],
-        "FF FB" : ["audio", "mp3"],
-        "FF F3" : ["audio", "mp3"],
-        "4F 67 67 53" : ["audio", "ogg"],
-    }).map(([key, value]) => [key.toLowerCase().replace(/\s/g, ''), value])
-);
+const fileTypeToSignatures = {
+    // "pdf": ["%PDF-"],
+    "png": ["89 50 4E 47 0D 0A 1A 0A"],
+    "jpg": ["FF D8 FF E0", "FF D8 FF EE", "FF D8 FF DB", "FF D8 FF E0 00 10 4A 46 49 46 00 01", "FF D8 FF E1 ?? ?? 45 78 69 66 00 00", "FF D8 FF E8", "FF 4F FF 51", "00 00 00 0C 4A 58 4C 20 0D 0A 87 0A", "FF 0A"], // missing FF D8 FF E1 ?? ?? 45 78 69 66 00 00
+    // "gif": ["GIF87a", "GIF89a"],
+    "webp": ["52 49 46 46 ?? ?? ?? ?? 57 45 42 50"],
+    "zip": ["50 4B 03 04", "50 4B 05 06", "50 4B 07 08"],
+    "exe": ["4D 5A"],
+    "mp3": ["49 44 33", "FF FB", "FF F3"],
+    "ogg": ["4F 67 67 53"],
+    // "webp": ["WEBP"]
+};
+
+const extMap = ext => {
+    switch (ext) {
+        case 'png':
+        case 'jpg':
+        case 'jpeg':
+        case 'webp':
+            return 'image';
+        case 'mp3':
+        case 'ogg':
+            return 'audio';
+    }
+}
+
+const category = {}
+Object.entries(fileTypeToSignatures).forEach(([ext, sigs]) => {
+    sigs.forEach(sig => {
+        category[sig.toLowerCase().replace(/\s/g, '')] = [extMap(ext), ext === "jpg" ? "jpeg" : ext]
+    })
+})
 
 function parse(query) {
-    console.log(query);
-
     if (query.signatures.length === 0 || query.signatures[0] === "") {
         throw new Error("No signatures provided");
     }
@@ -92,4 +104,4 @@ function parseFileBody(match) {
     return buffer;
 }
 
-module.exports = { parse, category };
+module.exports = { parse, fileTypeToSignatures };

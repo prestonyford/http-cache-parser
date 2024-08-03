@@ -6,11 +6,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta+Vaani:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="httpParser.js" defer></script>
+    <script src="frontend.js" defer></script>
 </head>
 <body>
     <div id="container">
         <h1>HTTP Cache File Signature Search</h1>
+        <hr />
         <h2>Configure</h2>
         <form>
             <label for="directoryPath">Enter directory path:</label><br>
@@ -18,7 +19,9 @@
 
             <label for="">Timeframe:</label><br>
             <div class="mb" id="timeframes-container">
-                <input type="radio" id="timeframe-1hr" name="timeframe" value="1:00" checked>
+                <input type="radio" id="timeframe-2min" name="timeframe" value="0:02" checked>
+                <label for="timeframe-2min">Last 2min</label>
+                <input type="radio" id="timeframe-1hr" name="timeframe" value="1:00">
                 <label for="timeframe-1hr">Last 1hr</label>
                 <input type="radio" id="timeframe-3hr" name="timeframe" value="3:00">
                 <label for="timeframe-3hr">Last 3hrs</label>
@@ -45,7 +48,7 @@
             <button id="search-btn" type="submit">Search</button>
         </form>
 
-        <hr></hr>
+        <hr />
 
         <h2>Results</h2>
         <div id="results">
@@ -54,6 +57,12 @@
                 <option value="name">Name</option>
                 <option value="size">Size</option>
             </select>
+            <span class="mb" id="ascendingdescending-container">
+                <input type="radio" id="ascending" name="ascendingdescending" value="1" checked>
+                <label for="ascending">Ascending</label>
+                <input type="radio" id="descending" name="ascendingdescending" value="-1">
+                <label for="descending">Descending</label>
+            </span>
             <div id="results-container">
             
             </div>
@@ -62,7 +71,7 @@
     </div>
 
     <footer>
-        <a href="https://github.com/prestonyford/http-cache-parser">GitHub</a>
+        <a target="_blank" href="https://github.com/prestonyford/http-cache-parser">GitHub</a>
     </footer>
 </body>
 </html>

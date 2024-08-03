@@ -1,12 +1,11 @@
 const express = require('express');
-const { parse, category } = require('./parser.js');
+const path = require('path');
+const { parse, fileTypeToSignatures } = require('./parser.js');
 const app = express();
 
 const PORT = 4000;
 
-app.use(express.static('public'));
-
-// Use Cache-Control: no-store
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/search', async (req, res, next) => {
     let query = req.query;
@@ -16,10 +15,17 @@ app.get('/search', async (req, res, next) => {
     try {
         const results = parse(query);
         res.setHeader('Cache-Control', 'no-store');
-        // res.setHeader('Content-Type', `${category[query.signatures[0]][0]}/${category[query.signatures[0]][1]}`);
-        // res.setHeader('Content-length', results.size);
         res.status(200);
         res.send(results);
+    } catch (err) {
+        next(err);
+    }
+});
+
+app.get('/fileTypeToSignatures', async (req, res, next) => {
+    try {
+        res.status(200);
+        res.send(JSON.stringify(fileTypeToSignatures));
     } catch (err) {
         next(err);
     }
@@ -30,4 +36,5 @@ app.use((err, req, res, next) => {
     res.status(400).send(err.message);
 });
 
-app.listen(PORT, () => console.log('Listening on port ' + PORT));
+console.log("\nPress CTRL+C to terminate the application")
+app.listen(PORT, () => console.log(`Open localhost:${PORT} in your browser`));

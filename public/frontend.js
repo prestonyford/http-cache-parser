@@ -1,33 +1,20 @@
-// File signatures
+let fileTypeToSignatures;
+fetch(`/fileTypeToSignatures`).then(async response => {
+    if (response.ok) {
+        fileTypeToSignatures = await response.json();
+    }
+})
+let results = [];
+
+
+/*
+    DOCUMENT LISTENERS
+*/
 document.getElementById('preset').addEventListener("input", (event) => {
     let preset = event.target.value;
     console.log("Preset changed to " + preset);
     changeSigs(preset);
 });
-
-const fileTypeToSignatures = {
-    "pdf": ["%PDF-"],
-    "png": ["89 50 4E 47 0D 0A 1A 0A"],
-    "jpg": ["FF D8 FF E0", "FF D8 FF EE", "FF D8 FF DB", "FF D8 FF E0 00 10 4A 46 49 46 00 01", "FF D8 FF E1 ?? ?? 45 78 69 66 00 00", "FF D8 FF E8", "FF 4F FF 51", "00 00 00 0C 4A 58 4C 20 0D 0A 87 0A", "FF 0A"], // missing FF D8 FF E1 ?? ?? 45 78 69 66 00 00
-    // "gif": ["GIF87a", "GIF89a"],
-    "webp": ["52 49 46 46 ?? ?? ?? ?? 57 45 42 50"],
-    "zip": ["50 4B 03 04", "50 4B 05 06", "50 4B 07 08"],
-    "exe": ["4D 5A"],
-    "mp3": ["49 44 33", "FF FB", "FF F3"],
-    "ogg": ["4F 67 67 53"],
-    // "webp": ["WEBP"]
-};
-
-function changeSigs(preset) {
-    let sigs = document.getElementById('sigs');
-    if (preset in fileTypeToSignatures) {
-        sigs.value = fileTypeToSignatures[preset].join("\n");
-    }
-}
-
-// RESULTS
-
-let results = [];
 
 document.getElementById('search-btn').addEventListener("click", async (event) => {
     event.preventDefault();
@@ -62,10 +49,27 @@ document.getElementById('search-btn').addEventListener("click", async (event) =>
 
 document.getElementById('sortby').addEventListener("change", (event) => {
     if (results.length === 0) return;
-    sortResults();
     hideResults();
     showResults();
 });
+
+document.querySelectorAll('input[name="ascendingdescending"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+        hideResults();
+        showResults();
+    });
+});
+
+
+/*
+    HELPERS
+*/
+function changeSigs(preset) {
+    let sigs = document.getElementById('sigs');
+    if (preset in fileTypeToSignatures) {
+        sigs.value = fileTypeToSignatures[preset].join("\n");
+    }
+}
 
 function hideResults() {
     document.getElementById('results-container').innerHTML = '';
@@ -92,13 +96,14 @@ function showResults() {
 
 function sortResults() {
     const sortby = document.getElementById('sortby').value;
+    const sortorder = Number(document.querySelector('#ascendingdescending-container input[name="ascendingdescending"]:checked').value);
     results.sort((a, b) => {
         if (sortby === 'name') {
-            return a.name.localeCompare(b.name);
+            return sortorder * a.name.localeCompare(b.name);
         } else if (sortby === 'date') {
-            return new Date(a.date) - new Date(b.date);
+            return sortorder * (new Date(a.date) - new Date(b.date));
         } else if (sortby === 'size') {
-            return a.size - b.size;
+            return sortorder * (a.size - b.size);
         }
     });
 }
@@ -116,6 +121,9 @@ function createResult(file) {
     const itemDescription = document.createElement('div');
     itemDescription.classList.add('item-description');
     itemDescription.textContent = `${file.name} - ${file.date} - ${(file.size / 1048576).toFixed(2)} MB`;
+    // if (file.type === 'image') {
+    //     itemDescription.textContent += ` (w: ${preview.width}px, h: ${preview.height}px)`;
+    // }
 
     item.appendChild(itemPreview);
     item.appendChild(itemDescription);
@@ -126,15 +134,18 @@ function createResult(file) {
 function createPreview(file) {
     switch (file.type) {
         case "image":
-            return createImagePreview(file);
+            return _createImagePreview(file);
         case "audio":
-            return createAudioPreview(file);
+            return _createAudioPreview(file);
         default:
-            return createImagePreview(file);
+            return _createImagePreview(file);
     }
 }
 
-function createImagePreview(file) {
+function _createImagePreview(file) {
+    const div = document.createElement('div');
+    div.classList.add('image-preview');
+
     const img = document.createElement('img');
     const binaryString = window.atob(file.buffer);
     const buffer = new Uint8Array(binaryString.length);
@@ -145,10 +156,25 @@ function createImagePreview(file) {
     const blob = new Blob([arrayBuffer]); // , { type: 'image/png' }
     img.src = URL.createObjectURL(blob);
     img.alt = "no preview available";
-    return img;
+
+    div.appendChild(img);
+
+    const info = document.createElement('div');
+    info.classList.add('image-info');
+
+    img.onload = () => {
+        info.textContent = `w: ${img.width}px, h: ${img.height}px`;
+    }
+
+    div.appendChild(info);
+
+    return div;
 };
 
-function createAudioPreview(file) {
+function _createAudioPreview(file) {
+    const div = document.createElement('div');
+    div.classList.add('audio-preview');
+    
     const audio = document.createElement('audio');
     const binaryString = window.atob(file.buffer);
     const buffer = new Uint8Array(binaryString.length);
@@ -159,5 +185,7 @@ function createAudioPreview(file) {
     const blob = new Blob([arrayBuffer] , { type: 'audio/mpeg' }); // , { type: 'audio/mpeg' }
     audio.src = URL.createObjectURL(blob);
     audio.controls = true;
-    return audio;
+
+    div.appendChild(audio);
+    return div;
 }
