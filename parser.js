@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { ktx2ToPng } = require('./ktx2.js');
 
 const fileTypeToSignatures = {
     // "pdf": ["%PDF-"],
@@ -11,6 +12,7 @@ const fileTypeToSignatures = {
     "exe": ["4D 5A"],
     "mp3": ["49 44 33", "FF FB", "FF F3"],
     "ogg": ["4F 67 67 53"],
+    "ktx2": ["AB 4B 54 58 20 32 30 BB 0D 0A 1A 0A"],
     // "webp": ["WEBP"]
 };
 
@@ -20,6 +22,7 @@ const extMap = ext => {
         case 'jpg':
         case 'jpeg':
         case 'webp':
+        case 'ktx2':
             return 'image';
         case 'mp3':
         case 'ogg':
@@ -106,7 +109,12 @@ function getFileBody(filePath, signature) {
     if (buffer === null) {
         return null;
     }
-    return { buffer, type: sigToType(sig) };
+    const type = sigToType(sig);
+    // Browsers can't display KTX2 textures, so convert them to PNG
+    if (type === 'image/ktx2') {
+        return { buffer: ktx2ToPng(buffer).png, type: 'image/png' };
+    }
+    return { buffer, type };
 }
 
 // Newer Roblox cache (rbx-storage) entries use a binary "RBXH" header instead of raw HTTP headers:
