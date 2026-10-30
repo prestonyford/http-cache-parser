@@ -142,19 +142,18 @@ function createPreview(file) {
     }
 }
 
+function fileUrl(file) {
+    return `/file?${new URLSearchParams({ path: file.path, signature: file.signature })}`;
+}
+
 function _createImagePreview(file) {
     const div = document.createElement('div');
     div.classList.add('image-preview');
 
     const img = document.createElement('img');
-    const binaryString = window.atob(file.buffer);
-    const buffer = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-        buffer[i] = binaryString.charCodeAt(i);
-    }
-    const arrayBuffer = buffer.buffer;
-    const blob = new Blob([arrayBuffer]); // , { type: 'image/png' }
-    img.src = URL.createObjectURL(blob);
+    // Lazy so large result sets only fetch what is scrolled into view
+    img.loading = 'lazy';
+    img.src = fileUrl(file);
     img.alt = "no preview available";
 
     div.appendChild(img);
@@ -176,14 +175,8 @@ function _createAudioPreview(file) {
     div.classList.add('audio-preview');
     
     const audio = document.createElement('audio');
-    const binaryString = window.atob(file.buffer);
-    const buffer = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-        buffer[i] = binaryString.charCodeAt(i);
-    }
-    const arrayBuffer = buffer.buffer;
-    const blob = new Blob([arrayBuffer] , { type: 'audio/mpeg' }); // , { type: 'audio/mpeg' }
-    audio.src = URL.createObjectURL(blob);
+    audio.preload = 'none';
+    audio.src = fileUrl(file);
     audio.controls = true;
 
     div.appendChild(audio);

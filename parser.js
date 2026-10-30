@@ -38,40 +38,56 @@ function parse(query) {
     if (query.signatures.length === 0 || query.signatures[0] === "") {
         throw new Error("No signatures provided");
     }
-    if (!query.timeframe.match(/^\d{1,2}:\d{1,2}$/)) {
+    if (query.timeframe !== "all" && !query.timeframe.match(/^\d{1,2}:\d{1,2}$/)) {
         throw new Error("Invalid timeframe format");
     }
 
-    const timeframe = new Date();
-    timeframe.setHours(timeframe.getHours() - parseInt(query.timeframe.split(':')[0]));
-    timeframe.setMinutes(timeframe.getMinutes() - parseInt(query.timeframe.split(':')[1]));
+    let timeframe;
+    if (query.timeframe === "all") {
+        timeframe = new Date(0);
+    } else {
+        timeframe = new Date();
+        timeframe.setHours(timeframe.getHours() - parseInt(query.timeframe.split(':')[0]));
+        timeframe.setMinutes(timeframe.getMinutes() - parseInt(query.timeframe.split(':')[1]));
+    }
 
     // Signatures all lowercase and no spaces
     return searchDirectory(query.path, timeframe, query.signatures.map((sig) => sig.toLowerCase().replace(/\s/g, '')));
 }
 
+// Recursively collects files under directory modified after timeframe
+function collectFiles(directory, timeframe) {
+    let files = [];
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+        const fullPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) {
+            files = files.concat(collectFiles(fullPath, timeframe));
+        } else if (entry.isFile()) {
+            const stats = fs.statSync(fullPath);
+            if (stats.mtime > timeframe) {
+                files.push({ fullPath, stats });
+            }
+        }
+    }
+    return files;
+}
+
 function searchDirectory(directory, timeframe, signatures) {
-    let files = fs.readdirSync(directory);
-    files = files.filter((file) => {
-        const stats = fs.statSync(path.join(directory, file));
-        return stats.mtime > timeframe;
-    });
+    const files = collectFiles(directory, timeframe);
 
     let results = []
-    
-    for (const file of files) {
-        let [buffer, sig] = parseFileSig(path.join(directory, file), signatures);
-        if (sig !== null) {
-            sig = sig.toLowerCase().replace(/\s/g, '');
-        }
+
+    for (const { fullPath, stats } of files) {
+        const [buffer, sig] = parseFileSig(fullPath, signatures);
         if (buffer !== null) {
-            const stats = fs.statSync(path.join(directory, file));
+            // File contents are not included here; they are fetched individually with getFileBody
             results.push({
-                name: file,
-                type: category[sig] ? `${category[sig][0]}/${category[sig][1]}` : "image/png",
+                name: path.relative(directory, fullPath),
+                path: fullPath,
+                signature: sig,
+                type: sigToType(sig),
                 date: stats.mtime.toLocaleString(),
-                size: stats.size,
-                buffer: buffer.toString('base64')
+                size: stats.size
             });
         }
     }
@@ -79,9 +95,57 @@ function searchDirectory(directory, timeframe, signatures) {
     return results;
 }
 
+function sigToType(sig) {
+    return category[sig] ? `${category[sig][0]}/${category[sig][1]}` : "image/png";
+}
+
+// Returns the body of a single file matched by a previous search, or null if it no longer matches
+function getFileBody(filePath, signature) {
+    signature = signature.toLowerCase().replace(/\s/g, '');
+    const [buffer, sig] = parseFileSig(filePath, [signature]);
+    if (buffer === null) {
+        return null;
+    }
+    return { buffer, type: sigToType(sig) };
+}
+
+// Newer Roblox cache (rbx-storage) entries use a binary "RBXH" header instead of raw HTTP headers:
+//   "RBXH" | u32 version | u32 urlLength | url | u8 | u32 status | u32 headersLength | u32 headersHash
+//   | u32 bodyLength | u32 bodyHash | u32 unknown | headers | body
+// Returns the body, or null if the data is not a valid RBXH entry
+function parseRbxhBody(data) {
+    if (data.length < 12 || data.toString('latin1', 0, 4) !== 'RBXH') {
+        return null;
+    }
+    let offset = 12 + data.readUInt32LE(8) + 1;
+    if (offset + 24 > data.length) {
+        return null;
+    }
+    const headersLength = data.readUInt32LE(offset + 4);
+    const bodyLength = data.readUInt32LE(offset + 12);
+    offset += 24 + headersLength;
+    if (offset + bodyLength !== data.length) {
+        return null;
+    }
+    return data.subarray(offset);
+}
+
 function parseFileSig(filePath, signatures) {
     // All lowercase and no spaces
     const data = fs.readFileSync(filePath);
+
+    const rbxhBody = parseRbxhBody(data);
+    if (rbxhBody !== null) {
+        // Body starts directly with the file contents, so only match at the start
+        const hexBody = rbxhBody.toString('hex');
+        for (const signature of signatures) {
+            if (new RegExp(`^${signature.replace(/\?/g, '.')}`).test(hexBody)) {
+                return [rbxhBody, signature];
+            }
+        }
+        return [null, null];
+    }
+
     const hexString = data.toString('hex');
 
     for (const signature of signatures) {
@@ -107,4 +171,4 @@ function parseFileBody(match) {
     return buffer;
 }
 
-module.exports = { parse, fileTypeToSignatures };
+module.exports = { parse, getFileBody, fileTypeToSignatures };

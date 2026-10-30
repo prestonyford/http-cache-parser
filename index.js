@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { parse, fileTypeToSignatures } = require('./parser.js');
+const { parse, getFileBody, fileTypeToSignatures } = require('./parser.js');
 const app = express();
 
 const PORT = 4000;
@@ -17,6 +17,22 @@ app.get('/search', async (req, res, next) => {
         res.setHeader('Cache-Control', 'no-store');
         res.status(200);
         res.send(results);
+    } catch (err) {
+        next(err);
+    }
+});
+
+app.get('/file', async (req, res, next) => {
+    try {
+        const file = getFileBody(req.query.path, req.query.signature);
+        if (file === null) {
+            res.status(404).send("File no longer matches signature");
+            return;
+        }
+        res.setHeader('Cache-Control', 'no-store');
+        res.type(file.type);
+        res.status(200);
+        res.send(file.buffer);
     } catch (err) {
         next(err);
     }
